@@ -3,9 +3,9 @@ global:
 environment: prod
 services:
   # Consumers RabbitMQ atuais ainda não suportam duas réplicas concorrentes.
-  authentication-service: { replicas: 1, ingress: { enabled: true, tls: true, host: auth.wellpass.example.com } }
-  customer-service: { replicas: 2, ingress: { enabled: true, tls: true, host: customer.wellpass.example.com } }
-  provider-service: { replicas: 2, ingress: { enabled: true, tls: true, host: provider.wellpass.example.com } }
-  wellness-session-service: { replicas: 2, ingress: { enabled: true, tls: true, host: sessions.wellpass.example.com } }
-  notification-service: { replicas: 1, ingress: { enabled: true, tls: true, host: notifications.wellpass.example.com } }
-  web: { ingress: { enabled: true, tls: true, host: app.wellpass.example.com } }
+  authentication-service: { replicas: 1, ingress: { enabled: true, tls: false, host: auth.prod.127.0.0.1.nip.io } }
+  customer-service: { replicas: 2, ingress: { enabled: true, tls: false, host: customer.prod.127.0.0.1.nip.io } }
+  provider-service: { replicas: 2, ingress: { enabled: true, tls: false, host: provider.prod.127.0.0.1.nip.io } }
+  wellness-session-service: { replicas: 2, ingress: { enabled: true, tls: false, host: sessions.prod.127.0.0.1.nip.io } }
+  notification-service: { replicas: 1, ingress: { enabled: true, tls: false, host: notifications.prod.127.0.0.1.nip.io } }
+  web: { ingress: { enabled: true, tls: false, host: app.prod.127.0.0.1.nip.io } }
