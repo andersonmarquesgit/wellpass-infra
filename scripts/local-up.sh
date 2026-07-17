@@ -11,7 +11,7 @@ if ! kind get clusters | grep -qx "$cluster"; then
 fi
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-kubectl wait --namespace ingress-nginx --for=condition=Ready pod --selector=app.kubernetes.io/component=controller --timeout=180s
+kubectl rollout status --namespace ingress-nginx deployment/ingress-nginx-controller --timeout=180s
 
 for env in dev sit uat prod; do
   namespace="wellpass-$env"
