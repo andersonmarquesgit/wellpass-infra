@@ -74,7 +74,7 @@ services:
     livenessPath: /
     replicas: 1
     port: 3000
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-9c9927faec3d56ed20d84ed1874bf2389594175c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 }
     env: {}
     resources:
       requests: { cpu: 50m, memory: 128Mi }
