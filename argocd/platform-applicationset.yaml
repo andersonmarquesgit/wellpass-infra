@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: wellpass-platform-environments
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+          - env: sit
+          - env: uat
+          - env: prod
+  template:
+    metadata:
+      name: wellpass-platform-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:andersonmarquesgit/wellpass-infra.git
+        targetRevision: main
+        path: platform/overlays/{{env}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: wellpass-{{env}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

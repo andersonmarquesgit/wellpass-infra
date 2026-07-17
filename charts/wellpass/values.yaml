@@ -1,0 +1,7 @@
+global:
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  secretName: wellpass-secrets
+
+services: {}
+

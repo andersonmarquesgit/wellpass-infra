@@ -1,0 +1,20 @@
+name: Validate GitOps
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: azure/setup-helm@v4
+      - uses: azure/setup-kubectl@v4
+      - run: |
+          for env in dev sit uat prod; do
+            kubectl kustomize "platform/overlays/$env" >/dev/null
+            helm lint charts/wellpass -f environments/common.yaml -f "environments/$env/values.yaml"
+            helm template wellpass charts/wellpass -f environments/common.yaml -f "environments/$env/values.yaml" >/dev/null
+          done

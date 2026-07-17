@@ -1,0 +1,7 @@
+.DS_Store
+.env
+*.local.yaml
+secrets/
+charts/**/charts/
+charts/**/Chart.lock
+

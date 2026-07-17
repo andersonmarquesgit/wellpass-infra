@@ -1,0 +1,25 @@
+{{- range $name, $service := .Values.services }}
+{{- if and $service.enabled $service.migrationDir }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $name }}-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: "{{ $.Values.global.migrationImage.repository }}:{{ $.Values.global.migrationImage.tag }}"
+          args: ["$(DSN)", {{ $service.migrationDir | quote }}]
+          env:
+            - name: DSN
+              valueFrom:
+                secretKeyRef: { name: {{ printf "%s-secrets" $name }}, key: DSN }
+{{- end }}
+{{- end }}

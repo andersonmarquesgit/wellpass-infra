@@ -1,0 +1,77 @@
+global:
+  migrationImage: { repository: ghcr.io/andersonmarquesgit/wellpass-migrations, tag: sha-REPLACE_ME }
+services:
+  authentication-service:
+    enabled: true
+    migrationDir: services/authentication-service
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-authentication-service, tag: sha-REPLACE_ME }
+    env:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      LOGGER_URL: "http://logger-service/log"
+      SUPPORTED_COUNTRIES: "br,us,mx"
+    resources: &goResources
+      requests: { cpu: 25m, memory: 48Mi }
+      limits: { cpu: 500m, memory: 256Mi }
+  customer-service:
+    enabled: true
+    migrationDir: services/customer-service
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-customer-service, tag: sha-REPLACE_ME }
+    env:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SUPPORTED_COUNTRIES: "br,us,mx"
+      MEMBERSHIP_EVENTS_ENABLED: "true"
+      MEMBERSHIP_ROLLOVER_ENABLED: "true"
+    resources: *goResources
+  provider-service:
+    enabled: true
+    migrationDir: services/provider-service
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-provider-service, tag: sha-REPLACE_ME }
+    env:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SUPPORTED_COUNTRIES: "br,us,mx"
+    resources: *goResources
+  wellness-session-service:
+    enabled: true
+    migrationDir: services/wellness-session-service
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-wellness-session-service, tag: sha-REPLACE_ME }
+    env:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SUPPORTED_COUNTRIES: "br,us,mx"
+      MEMBERSHIP_INTERNAL_URL: "http://customer-service"
+      RULES_NOSHOW_ENABLED: "true"
+      BOOKING_EVENTS_ENABLED: "true"
+    resources: *goResources
+  notification-service:
+    enabled: true
+    migrationDir: services/notification-service
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-notification-service, tag: sha-REPLACE_ME }
+    env:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      SUPPORTED_COUNTRIES: "br,us,mx"
+      MAIL_HOST: "mailhog"
+      MAIL_PORT: "1025"
+      MAIL_ENCRYPTION: "none"
+      MAIL_FROM_NAME: "Wellpass"
+      MAIL_FROM_ADDRESS: "no-reply@wellpass.local"
+    resources: *goResources
+  logger-service:
+    enabled: true
+    replicas: 1
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-logger-service, tag: sha-REPLACE_ME }
+    env:
+      MONGO_URL: "mongodb://mongo:27017"
+    resources: *goResources
+  web:
+    enabled: false
+    replicas: 1
+    port: 3000
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-REPLACE_ME }
+    env: {}
+    resources:
+      requests: { cpu: 50m, memory: 128Mi }
+      limits: { cpu: 1, memory: 512Mi }

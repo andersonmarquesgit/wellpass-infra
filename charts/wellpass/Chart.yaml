@@ -1,0 +1,7 @@
+apiVersion: v2
+name: wellpass
+description: Workloads do Wellpass; dependências stateful ficam na camada platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+

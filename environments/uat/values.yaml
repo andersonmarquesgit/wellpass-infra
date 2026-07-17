@@ -1,0 +1,10 @@
+global:
+  imagePullPolicy: IfNotPresent
+environment: uat
+services:
+  authentication-service: { ingress: { enabled: true, host: auth.uat.127.0.0.1.nip.io } }
+  customer-service: { ingress: { enabled: true, host: customer.uat.127.0.0.1.nip.io } }
+  provider-service: { ingress: { enabled: true, host: provider.uat.127.0.0.1.nip.io } }
+  wellness-session-service: { ingress: { enabled: true, host: sessions.uat.127.0.0.1.nip.io } }
+  notification-service: { ingress: { enabled: true, host: notifications.uat.127.0.0.1.nip.io } }
+  web: { ingress: { enabled: true, host: app.uat.127.0.0.1.nip.io } }

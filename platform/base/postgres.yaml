@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+data:
+  00-databases.sql: |
+    CREATE USER users PASSWORD 'local-only';
+    CREATE DATABASE users OWNER users;
+    CREATE USER customers PASSWORD 'local-only';
+    CREATE DATABASE customers OWNER customers;
+    CREATE USER providers PASSWORD 'local-only';
+    CREATE DATABASE providers OWNER providers;
+    CREATE USER wellness_sessions PASSWORD 'local-only';
+    CREATE DATABASE wellness_sessions OWNER wellness_sessions;
+    CREATE USER notifications PASSWORD 'local-only';
+    CREATE DATABASE notifications OWNER notifications;
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels: { app: postgres }
+  template:
+    metadata:
+      labels: { app: postgres }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports: [{ name: postgres, containerPort: 5432 }]
+          env:
+            - { name: POSTGRES_PASSWORD, value: local-only }
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+            - { name: init, mountPath: /docker-entrypoint-initdb.d }
+          readinessProbe:
+            exec: { command: [pg_isready, -U, postgres] }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 1, memory: 768Mi }
+      volumes:
+        - name: init
+          configMap: { name: postgres-init }
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: { requests: { storage: 2Gi } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: postgres }
+spec:
+  selector: { app: postgres }
+  ports: [{ name: postgres, port: 5432 }]
+

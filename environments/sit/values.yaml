@@ -1,0 +1,10 @@
+global:
+  imagePullPolicy: IfNotPresent
+environment: sit
+services:
+  authentication-service: { ingress: { enabled: true, host: auth.sit.127.0.0.1.nip.io } }
+  customer-service: { ingress: { enabled: true, host: customer.sit.127.0.0.1.nip.io } }
+  provider-service: { ingress: { enabled: true, host: provider.sit.127.0.0.1.nip.io } }
+  wellness-session-service: { ingress: { enabled: true, host: sessions.sit.127.0.0.1.nip.io } }
+  notification-service: { ingress: { enabled: true, host: notifications.sit.127.0.0.1.nip.io } }
+  web: { ingress: { enabled: true, host: app.sit.127.0.0.1.nip.io } }
