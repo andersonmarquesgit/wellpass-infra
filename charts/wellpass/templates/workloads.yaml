@@ -36,11 +36,11 @@ spec:
             - secretRef:
                 name: {{ $service.secretName | default (printf "%s-secrets" $name) }}
           readinessProbe:
-            httpGet: { path: /readyz, port: http }
+            httpGet: { path: {{ $service.readinessPath | default "/readyz" }}, port: http }
             initialDelaySeconds: 3
             periodSeconds: 10
           livenessProbe:
-            httpGet: { path: /healthz, port: http }
+            httpGet: { path: {{ $service.livenessPath | default "/healthz" }}, port: http }
             initialDelaySeconds: 15
             periodSeconds: 20
           resources:

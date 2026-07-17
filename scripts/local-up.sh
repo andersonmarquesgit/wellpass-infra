@@ -22,7 +22,7 @@ for env in dev sit uat prod; do
     if [ "$database" = none ]; then
       dsn="unused"
     else
-      dsn="host=postgres port=5432 user=$database password=local-only dbname=$database sslmode=disable timezone=UTC"
+      dsn="host=postgres port=5432 user=$database password=local-only dbname=$database sslmode=disable"
     fi
     kubectl create secret generic "$service-secrets" \
       --namespace "$namespace" \
