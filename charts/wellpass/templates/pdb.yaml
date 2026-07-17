@@ -1,0 +1,13 @@
+{{- range $name, $service := .Values.services }}
+{{- if and $service.enabled ($service.pdb | default true) }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $name }}
+spec:
+  minAvailable: {{ $service.pdbMinAvailable | default 1 }}
+  selector:
+    matchLabels: { app.kubernetes.io/name: {{ $name }} }
+{{- end }}
+{{- end }}

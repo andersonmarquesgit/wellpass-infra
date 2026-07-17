@@ -1,0 +1,36 @@
+name: Promote release
+on:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: Current validated environment
+        required: true
+        type: choice
+        options: [dev, sit, uat]
+      to:
+        description: Next environment
+        required: true
+        type: choice
+        options: [sit, uat, prod]
+      sha:
+        description: Full application commit SHA
+        required: true
+        type: string
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.to }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Enforce sequential promotion
+        run: scripts/promote-release.sh '${{ inputs.from }}' '${{ inputs.to }}' '${{ inputs.sha }}'
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          branch: deploy/${{ inputs.to }}-${{ inputs.sha }}
+          commit-message: 'deploy(${{ inputs.to }}): wellpass ${{ inputs.sha }}'
+          title: 'deploy(${{ inputs.to }}): promote wellpass ${{ inputs.sha }}'
+          body: Promoção sequencial do mesmo artefato imutável, sem rebuild.
+          labels: deployment,environment-${{ inputs.to }}

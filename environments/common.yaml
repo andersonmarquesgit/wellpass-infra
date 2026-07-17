@@ -1,5 +1,7 @@
 global:
   migrationImage: { repository: ghcr.io/andersonmarquesgit/wellpass-migrations, tag: sha-9c9927faec3d56ed20d84ed1874bf2389594175c }
+  externalSecrets: { enabled: false, secretStore: wellpass-secretsmanager, pathPrefix: wellpass, refreshInterval: 1h }
+  networkPolicy: { enabled: false }
 services:
   authentication-service:
     enabled: true

@@ -10,13 +10,23 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
 spec:
   backoffLimit: 2
+  ttlSecondsAfterFinished: 86400
   template:
     spec:
       restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
       containers:
         - name: migrate
           image: "{{ $.Values.global.migrationImage.repository }}:{{ $.Values.global.migrationImage.tag }}"
-          args: ["$(DSN)", {{ $service.migrationDir | quote }}]
+          command: ["/bin/sh", "-ec"]
+          args:
+            - exec /workspace/project/scripts/migrate-service.sh "$DSN" {{ $service.migrationDir | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
           env:
             - name: DSN
               valueFrom:

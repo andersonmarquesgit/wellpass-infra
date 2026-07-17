@@ -21,6 +21,9 @@ spec:
         app.kubernetes.io/name: {{ $name }}
         app.kubernetes.io/part-of: wellpass
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
       {{- with $.Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -29,6 +32,10 @@ spec:
         - name: {{ $name }}
           image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
           imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
           ports:
             - name: http
               containerPort: {{ $service.port | default 80 }}

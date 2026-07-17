@@ -2,6 +2,12 @@ global:
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   secretName: wellpass-secrets
+  externalSecrets:
+    enabled: false
+    secretStore: wellpass-secretsmanager
+    pathPrefix: wellpass
+    refreshInterval: 1h
+  networkPolicy:
+    enabled: false
 
 services: {}
-

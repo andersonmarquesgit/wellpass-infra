@@ -1,0 +1,12 @@
+global:
+  externalSecrets:
+    enabled: true
+    secretStore: wellpass-prod-secrets
+    pathPrefix: wellpass
+services:
+  authentication-service: { externalSecret: { enabled: true } }
+  customer-service: { externalSecret: { enabled: true } }
+  provider-service: { externalSecret: { enabled: true } }
+  wellness-session-service: { externalSecret: { enabled: true } }
+  notification-service: { externalSecret: { enabled: true } }
+  logger-service: { externalSecret: { enabled: true } }

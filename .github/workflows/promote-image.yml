@@ -1,18 +1,26 @@
-name: Receive application image
+name: Receive release candidate
 on:
   repository_dispatch:
     types: [wellpass-image]
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   dev:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: actions/checkout@v6
-      - name: Promote commit tag to dev
-        env:
-          TAG: sha-${{ github.event.client_payload.sha }}
-        run: sed -i -E "s/tag: sha-[A-Za-z0-9_-]+/tag: $TAG/g" environments/common.yaml
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - name: Validate immutable SHA
+        env: { SHA: '${{ github.event.client_payload.sha }}' }
+        run: test "$(printf '%s' "$SHA" | grep -Ec '^[0-9a-f]{40}$')" -eq 1
+      - name: Set DEV release
+        env: { TAG: 'sha-${{ github.event.client_payload.sha }}' }
+        run: sed -i -E "s/sha-[0-9a-f]{40}/$TAG/g" releases/dev/release.yaml
+      - uses: peter-evans/create-pull-request@v8
         with:
-          commit_message: "deploy(dev): wellpass ${{ github.event.client_payload.sha }}"
+          branch: deploy/dev-${{ github.event.client_payload.sha }}
+          commit-message: 'deploy(dev): wellpass ${{ github.event.client_payload.sha }}'
+          title: 'deploy(dev): wellpass ${{ github.event.client_payload.sha }}'
+          body: Release candidate construída após o Go CI. Merge inicia o sync DEV.
+          labels: deployment,environment-dev

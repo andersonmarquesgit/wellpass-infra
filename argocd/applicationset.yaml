@@ -25,6 +25,7 @@ spec:
           valueFiles:
             - ../../environments/common.yaml
             - ../../environments/{{env}}/values.yaml
+            - ../../releases/{{env}}/release.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: wellpass-{{env}}

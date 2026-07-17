@@ -14,7 +14,29 @@ jobs:
       - uses: azure/setup-kubectl@v4
       - run: |
           for env in dev sit uat prod; do
+            scripts/release-sha.sh "releases/$env/release.yaml"
             kubectl kustomize "platform/overlays/$env" >/dev/null
             helm lint charts/wellpass -f environments/common.yaml -f "environments/$env/values.yaml"
-            helm template wellpass charts/wellpass -f environments/common.yaml -f "environments/$env/values.yaml" >/dev/null
+            helm template wellpass charts/wellpass -f environments/common.yaml -f "environments/$env/values.yaml" -f "releases/$env/release.yaml" >/dev/null
           done
+          helm template wellpass charts/wellpass \
+            -f environments/common.yaml \
+            -f environments/cloud/non-prod.yaml \
+            -f environments/cloud/hardening.yaml \
+            -f environments/dev/values.yaml \
+            -f releases/dev/release.yaml >/dev/null
+          kubectl kustomize platform/cloud/non-prod >/dev/null
+          kubectl kustomize platform/cloud/prod >/dev/null
+  tofu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: opentofu/setup-opentofu@v1
+        with: { tofu_version: 1.12.1 }
+      - run: tofu fmt -check -recursive infrastructure/terraform
+      - name: Validate reusable module
+        working-directory: infrastructure/terraform/modules/workload-cluster
+        run: tofu init -backend=false && tofu validate
+      - name: Validate organization
+        working-directory: infrastructure/terraform/organization
+        run: tofu init -backend=false && tofu validate

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata: { name: wellpass-non-prod, namespace: argocd }
+spec:
+  generators:
+    - list:
+        elements: [{ env: dev }, { env: sit }, { env: uat }]
+  template:
+    metadata: { name: 'wellpass-{{env}}' }
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/andersonmarquesgit/wellpass-infra.git
+        targetRevision: main
+        path: charts/wellpass
+        helm:
+          releaseName: wellpass
+          valueFiles: [../../environments/common.yaml, ../../environments/cloud/non-prod.yaml, ../../environments/cloud/hardening.yaml, '../../environments/{{env}}/values.yaml', '../../releases/{{env}}/release.yaml']
+      destination: { server: https://kubernetes.default.svc, namespace: 'wellpass-{{env}}' }
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions: [CreateNamespace=true]

@@ -1,0 +1,10 @@
+global:
+  migrationImage: { repository: ghcr.io/andersonmarquesgit/wellpass-migrations, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 }
+services:
+  authentication-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-authentication-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  customer-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-customer-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  provider-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-provider-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  wellness-session-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-wellness-session-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  notification-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-notification-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  logger-service: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-logger-service, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
+  web: { image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-04b507f8625e52f8398036c148af8a893d1adbe2 } }
