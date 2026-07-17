@@ -3,6 +3,7 @@ global:
 services:
   authentication-service:
     enabled: true
+    deploymentStrategy: Recreate
     migrationDir: services/authentication-service
     replicas: 1
     image: { repository: ghcr.io/andersonmarquesgit/wellpass-authentication-service, tag: sha-9c9927faec3d56ed20d84ed1874bf2389594175c }
@@ -47,6 +48,7 @@ services:
     resources: *goResources
   notification-service:
     enabled: true
+    deploymentStrategy: Recreate
     migrationDir: services/notification-service
     replicas: 1
     image: { repository: ghcr.io/andersonmarquesgit/wellpass-notification-service, tag: sha-9c9927faec3d56ed20d84ed1874bf2389594175c }

@@ -10,6 +10,8 @@ metadata:
     {{- include "wellpass.labels" $ | nindent 4 }}
 spec:
   replicas: {{ $service.replicas | default 1 }}
+  strategy:
+    type: {{ $service.deploymentStrategy | default "RollingUpdate" }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
