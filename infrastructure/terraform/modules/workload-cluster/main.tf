@@ -3,6 +3,7 @@ locals {
 }
 
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -86,7 +87,7 @@ resource "aws_iam_role_policy" "external_secrets" {
     Statement = [{
       Effect   = "Allow"
       Action   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
-      Resource = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:${var.secrets_manager_path}/*"
+      Resource = "arn:aws:secretsmanager:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:secret:${var.secrets_manager_path}/*"
     }]
   })
 }
