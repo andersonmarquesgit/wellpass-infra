@@ -1,11 +1,11 @@
 global:
-  migrationImage: { repository: ghcr.io/andersonmarquesgit/wellpass-migrations, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+  migrationImage: { repository: ghcr.io/andersonmarquesgit/wellpass-migrations, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
 services:
   authentication-service:
     enabled: true
     migrationDir: services/authentication-service
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-authentication-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-authentication-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
       LOGGER_URL: "http://logger-service/log"
@@ -17,7 +17,7 @@ services:
     enabled: true
     migrationDir: services/customer-service
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-customer-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-customer-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
       SUPPORTED_COUNTRIES: "br,us,mx"
@@ -28,7 +28,7 @@ services:
     enabled: true
     migrationDir: services/provider-service
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-provider-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-provider-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
       SUPPORTED_COUNTRIES: "br,us,mx"
@@ -37,7 +37,7 @@ services:
     enabled: true
     migrationDir: services/wellness-session-service
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-wellness-session-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-wellness-session-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
       SUPPORTED_COUNTRIES: "br,us,mx"
@@ -49,7 +49,7 @@ services:
     enabled: true
     migrationDir: services/notification-service
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-notification-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-notification-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
       SUPPORTED_COUNTRIES: "br,us,mx"
@@ -62,7 +62,7 @@ services:
   logger-service:
     enabled: true
     replicas: 1
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-logger-service, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-logger-service, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env:
       MONGO_URL: "mongodb://mongo:27017"
     resources: *goResources
@@ -70,7 +70,7 @@ services:
     enabled: true
     replicas: 1
     port: 3000
-    image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-2ca8eed3ff0203efe9fdeb752f9d4511ea79d30c }
+    image: { repository: ghcr.io/andersonmarquesgit/wellpass-web, tag: sha-a6b4fe7e77d61de40707a6c9e698382b68aac227 }
     env: {}
     resources:
       requests: { cpu: 50m, memory: 128Mi }

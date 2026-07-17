@@ -20,6 +20,6 @@ render:
 	helm template wellpass charts/wellpass -f environments/common.yaml -f environments/dev/values.yaml > .rendered/apps-dev.yaml
 
 argocd-bootstrap:
-	kubectl apply -k argocd/bootstrap
+	kubectl apply --server-side --force-conflicts -k argocd/bootstrap
 	kubectl apply -f argocd/platform-applicationset.yaml
 	kubectl apply -f argocd/applicationset.yaml
