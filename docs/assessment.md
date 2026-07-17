@@ -25,6 +25,7 @@ O Compose atual mantém cinco PostgreSQL separados, RabbitMQ, MongoDB e MailHog.
 - Probes dedicadas não foram identificadas; o chart usa TCP até existirem endpoints de saúde.
 - Ingress, TLS, CORS e URLs públicas por ambiente ainda precisam de contratos explícitos.
 - Recursos, SLOs, backup/restore, retenção de logs e política de DR ainda não estão definidos.
+- `authentication-service` e `notification-service` não devem escalar horizontalmente até que os consumidores RabbitMQ usem uma estratégia concorrente segura; o overlay prod mantém uma réplica para esses dois serviços.
 
 ## Topologia
 
@@ -73,4 +74,3 @@ Valores são ordem de grandeza, sem impostos e sujeitos a região/data. Use a ca
 - Segredos não aparecem no Git nem nos valores renderizados.
 - Backup e restore foram exercitados antes de produção.
 - NetworkPolicies, requests/limits, PDB e probes HTTP estão definidos antes de produção real.
-

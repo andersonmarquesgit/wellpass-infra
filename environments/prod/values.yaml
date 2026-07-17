@@ -2,9 +2,10 @@ global:
   imagePullPolicy: IfNotPresent
 environment: prod
 services:
-  authentication-service: { replicas: 2, ingress: { enabled: true, tls: true, host: auth.wellpass.example.com } }
+  # Consumers RabbitMQ atuais ainda não suportam duas réplicas concorrentes.
+  authentication-service: { replicas: 1, ingress: { enabled: true, tls: true, host: auth.wellpass.example.com } }
   customer-service: { replicas: 2, ingress: { enabled: true, tls: true, host: customer.wellpass.example.com } }
   provider-service: { replicas: 2, ingress: { enabled: true, tls: true, host: provider.wellpass.example.com } }
   wellness-session-service: { replicas: 2, ingress: { enabled: true, tls: true, host: sessions.wellpass.example.com } }
-  notification-service: { replicas: 2, ingress: { enabled: true, tls: true, host: notifications.wellpass.example.com } }
+  notification-service: { replicas: 1, ingress: { enabled: true, tls: true, host: notifications.wellpass.example.com } }
   web: { ingress: { enabled: true, tls: true, host: app.wellpass.example.com } }
