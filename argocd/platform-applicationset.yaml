@@ -8,9 +8,13 @@ spec:
     - list:
         elements:
           - env: dev
+            cluster: wellpass-non-prod
           - env: sit
+            cluster: wellpass-non-prod
           - env: uat
+            cluster: wellpass-non-prod
           - env: prod
+            cluster: wellpass-prod
   template:
     metadata:
       name: wellpass-platform-{{env}}
@@ -21,7 +25,7 @@ spec:
         targetRevision: main
         path: platform/overlays/{{env}}
       destination:
-        server: https://kubernetes.default.svc
+        name: '{{cluster}}'
         namespace: wellpass-{{env}}
       syncPolicy:
         automated:

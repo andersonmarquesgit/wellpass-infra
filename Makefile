@@ -1,7 +1,7 @@
 SHELL := /bin/sh
 CLUSTER ?= wellpass
 
-.PHONY: local-up local-down validate render argocd-bootstrap
+.PHONY: local-up local-down validate render argocd-bootstrap floci-argocd
 
 local-up:
 	./scripts/local-up.sh $(CLUSTER)
@@ -23,3 +23,6 @@ argocd-bootstrap:
 	kubectl apply --server-side --force-conflicts -k argocd/bootstrap
 	kubectl apply -f argocd/platform-applicationset.yaml
 	kubectl apply -f argocd/applicationset.yaml
+
+floci-argocd:
+	./scripts/register-floci-clusters.sh

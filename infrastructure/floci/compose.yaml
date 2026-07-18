@@ -1,6 +1,6 @@
 services:
   floci:
-    image: floci/floci:1.5.11-compat
+    image: floci/floci:1.5.14-compat
     user: root
     ports: ["4566:4566"]
     environment:
@@ -21,6 +21,20 @@ services:
       interval: 5s
       timeout: 3s
       retries: 30
+
+  floci-ui:
+    image: floci/floci-ui:0.2.0
+    ports: ["4500:4500"]
+    environment:
+      FLOCI_ENDPOINT: http://floci:4566
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: "111111111111"
+      AWS_SECRET_ACCESS_KEY: test
+      PORT: "4500"
+    depends_on:
+      floci:
+        condition: service_healthy
+    networks: [wellpass-floci]
 networks:
   wellpass-floci: { name: wellpass-floci }
 volumes:
