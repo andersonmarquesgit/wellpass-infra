@@ -4,8 +4,8 @@ Repositório GitOps inicial para executar o Wellpass em `dev`, `sit`, `uat` e `p
 
 ## Decisão inicial
 
-- **Local/CI:** um cluster `kind`, registry Docker local e Argo CD.
-- **Ambientes:** namespaces isolados no mesmo cluster; `prod` deve migrar para cluster/conta separados antes de receber dados reais.
+- **Local/CI:** o cluster `kind` hospeda o Argo CD como management plane.
+- **Ambientes:** Floci cria um EKS/k3s non-prod para DEV/SIT/UAT e outro para PROD; o Argo CD registra ambos como destinos externos.
 - **Aplicações:** chart Helm reutilizável com valores por ambiente.
 - **Plataforma local:** Kustomize para PostgreSQL, RabbitMQ, MongoDB e MailHog.
 - **AWS:** emulador opcional; não faz parte do caminho crítico enquanto os serviços não usarem APIs AWS.
@@ -37,9 +37,56 @@ dois `ApplicationSet` em `argocd/` e execute:
 
 ```bash
 make argocd-bootstrap
+make floci-argocd
 ```
 
 `make local-down` remove somente o cluster kind chamado `wellpass`; não altera o monorepo da aplicação.
+
+## Ciclo de vida da infraestrutura local
+
+### Subir o laboratório completo
+
+```bash
+cd /Users/anderson.marques/Workspace-Go/wellpass-infra
+
+docker compose -f infrastructure/floci/compose.yaml up -d
+./infrastructure/floci/bootstrap.sh
+make local-up
+make argocd-bootstrap
+make floci-argocd
+```
+
+Essa sequência inicia Floci Core/UI, cria os EKS/k3s non-prod e prod, cria o
+Kind, instala o Argo CD e registra os clusters Floci como destinos GitOps.
+
+### Desligar preservando os dados do Floci
+
+```bash
+cd /Users/anderson.marques/Workspace-Go/wellpass-infra
+
+make local-down
+docker compose -f infrastructure/floci/compose.yaml down
+```
+
+O Kind e o Argo CD são removidos. Os volumes persistentes do Floci não são
+apagados e podem ser reutilizados na próxima inicialização.
+
+### Remover completamente o laboratório
+
+> **Atenção:** os comandos abaixo removem clusters EKS/k3s, registry local e
+> volumes do Floci. Dados locais dos ambientes serão perdidos.
+
+```bash
+docker rm -f \
+  floci-eks-wellpass-non-prod \
+  floci-eks-wellpass-prod \
+  floci-ecr-registry
+
+docker compose -f infrastructure/floci/compose.yaml down -v
+```
+
+O monorepo `wellpass` e o repositório `wellpass-infra` não são alterados por
+nenhuma dessas operações.
 
 ## Antes do primeiro deploy funcional
 
