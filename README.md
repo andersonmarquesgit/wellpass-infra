@@ -65,11 +65,15 @@ Kind, instala o Argo CD e registra os clusters Floci como destinos GitOps.
 cd /Users/anderson.marques/Workspace-Go/wellpass-infra
 
 make local-down
-docker compose -f infrastructure/floci/compose.yaml down
 ```
 
-O Kind e o Argo CD são removidos. Os volumes persistentes do Floci não são
-apagados e podem ser reutilizados na próxima inicialização.
+O comando desconecta os EKS da rede do Kind, para os containers k3s/registry,
+remove Kind/Argo CD e executa `docker compose stop` no Floci Core/UI. Containers,
+rede e volumes persistentes permanecem disponíveis para a próxima inicialização.
+
+Não use `docker compose down` neste modo: os EKS e o registry são criados
+dinamicamente pelo Floci, não pertencem ao projeto Compose e manteriam a rede
+`wellpass-floci` em uso.
 
 ### Remover completamente o laboratório
 

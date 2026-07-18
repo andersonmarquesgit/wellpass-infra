@@ -25,4 +25,9 @@ for account in 111111111111 222222222222; do
   aws_local "$account" ecr describe-repositories --repository-names wellpass >/dev/null 2>&1 ||
   aws_local "$account" ecr create-repository --repository-name wellpass >/dev/null
 done
+for container in floci-eks-wellpass-non-prod floci-eks-wellpass-prod floci-ecr-registry; do
+  if docker inspect "$container" >/dev/null 2>&1; then
+    docker start "$container" >/dev/null
+  fi
+done
 echo "Floci accounts ready: non-prod=111111111111 prod=222222222222"

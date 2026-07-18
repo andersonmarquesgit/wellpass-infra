@@ -7,7 +7,7 @@ local-up:
 	./scripts/local-up.sh $(CLUSTER)
 
 local-down:
-	kind delete cluster --name $(CLUSTER)
+	./scripts/local-down.sh $(CLUSTER)
 
 validate:
 	kubectl kustomize platform/overlays/dev >/dev/null
